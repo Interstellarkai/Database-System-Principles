@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+# Flask container from ./app
+  flask:
+    container_name: flask
+    build:
+      context: ./app
+      dockerfile: ./Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - 5000:5000
+    command: python3 project.py
+
+  postgres:
+    container_name: postgres
+    build:
+      context: ./database
+      dockerfile: ./Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  postgres:
+  pgadmin:
