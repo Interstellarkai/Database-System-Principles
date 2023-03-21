@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Example of Treatjs!</title>
+  <link rel="stylesheet" href="../static/vendor/treantjs/Treant.css" type="text/css" />
+</head>
+
+<body>
+  {# generate a div to hold each graph in graph_data #} 
+  {% for graph in graph_data %}
+  <div id="graph-{{ loop.index }}" style="width: 100vw; height: 100vh"></div>
+  {% endfor %}
+
+  <!-- javascript -->
+  <script src="../static/vendor/jquery.min.js"></script>
+  <script src="../static/vendor/raphael.js"></script>
+  <script src="../static/vendor/treantjs/Treant.js"></script>
+
+  <script>
+    {# generate a js object for each graph in graph_data #}
+    {% for kev, val in graph_data.items() %}
+    const chart{{ loop.index }} = new Treant({
+      chart: {
+        container: "#graph-{{ loop.index }}"
+      },
+      nodeStructure: {{ val| tojson | safe }}
+          }, function () {
+        alert('Tree Loaded')
+      }, $);
+    {% endfor %}
+  </script>
+</body>
+
+</html>
